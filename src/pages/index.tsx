@@ -1,7 +1,9 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 
 const Home: NextPage = () => {
+  const user = useUser()
 
   return (
     <>
@@ -12,6 +14,8 @@ const Home: NextPage = () => {
       </Head>
       <main>
         <h1>Twitter</h1>
+        {user.isSignedIn && <SignOutButton />}
+        {!user.isSignedIn && <SignInButton />}
       </main>
     </>
   );
