@@ -2,19 +2,15 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { api } from "~/utils/api";
-import { CreatePostWizard } from "~/pages/components/CreatePostWizard";
-import { PostView } from "~/pages/components/PostView";
+import { CreatePostWizard } from "~/components/CreatePostWizard";
+import { Feed } from "~/components/Feed";
 
 const Home: NextPage = () => {
-  const user = useUser()
-  const { data, isLoading } = api.posts.getAll.useQuery()
+  const { isLoaded: userLoaded, isSignedIn} = useUser()
+  api.posts.getAll.useQuery()
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (!data) {
-    return <div>No data</div>
+  if (!userLoaded) {
+    return <div />
   }
 
   return (
@@ -28,16 +24,13 @@ const Home: NextPage = () => {
         <div className="w-full md:max-w-2xl border-x border-slate-400 h-full">
           <div className="flex border-b border-slate-400 p-4">
             <div className="flex justify-center">
-              {user.isSignedIn && <CreatePostWizard />}
-              {!user.isSignedIn && <SignInButton />}
+              {isSignedIn && <CreatePostWizard />}
+              {!isSignedIn && <SignInButton />}
             </div>
           </div>
 
-          <div className="flex flex-col">
-            {data.map((postWithUser) => (
-              <PostView key={postWithUser.post.id} postWithUser={postWithUser}  />
-            ))}
-          </div>
+          <Feed />
+
         </div>
       </main>
     </>
