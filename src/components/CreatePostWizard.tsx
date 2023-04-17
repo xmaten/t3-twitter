@@ -2,6 +2,7 @@ import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { api } from "~/utils/api";
 import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 
 export const CreatePostWizard = () => {
   const { user } = useUser()
@@ -10,6 +11,15 @@ export const CreatePostWizard = () => {
     onSuccess: async () => {
       setValue('')
       await ctx.posts.getAll.invalidate()
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError?.fieldErrors.content
+
+      if (errorMessage && errorMessage[0]) {
+        toast.error(errorMessage[0])
+      } else {
+        toast.error("Failed to post! Please try again")
+      }
     }
   })
 
