@@ -23,7 +23,7 @@ const Home: NextPage = () => {
       <main className="flex h-screen justify-center">
         <div className="w-full md:max-w-2xl border-x border-slate-400 h-full">
           <div className="flex border-b border-slate-400 p-4">
-            <div className="flex justify-center">
+            <div className="flex justify-center w-full">
               {isSignedIn && <CreatePostWizard />}
               {!isSignedIn && <SignInButton />}
             </div>
