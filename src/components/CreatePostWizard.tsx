@@ -5,14 +5,19 @@ import { FormEvent, useState } from "react";
 
 export const CreatePostWizard = () => {
   const { user } = useUser()
-  const {mutate} = api.posts.create.useMutation()
+  const ctx = api.useContext()
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: async () => {
+      setValue('')
+      await ctx.posts.getAll.invalidate()
+    }
+  })
 
   const [value, setValue] = useState('')
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     mutate({ content: value })
-    setValue('')
   }
 
   if (!user) {
@@ -28,6 +33,7 @@ export const CreatePostWizard = () => {
           className="bg-transparent grow outline-none"
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          disabled={isPosting}
         />
       </form>
     </div>
