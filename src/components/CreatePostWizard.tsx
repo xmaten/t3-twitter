@@ -3,6 +3,7 @@ import Image from "next/image";
 import { api } from "~/utils/api";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { Spinner } from "~/components/Spinner";
 
 export const CreatePostWizard = () => {
   const { user } = useUser()
@@ -45,6 +46,12 @@ export const CreatePostWizard = () => {
           onChange={(e) => setValue(e.target.value)}
           disabled={isPosting}
         />
+
+        {isPosting && (
+          <div className="flex items-center justify-center">
+            <Spinner size={20} />
+          </div>
+        )}
       </form>
     </div>
   )
