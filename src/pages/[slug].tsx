@@ -6,6 +6,7 @@ import { prisma } from "~/server/db";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { Wrapper } from "~/components/Wrapper";
 import { createServerSideHelpers } from "@trpc/react-query/server";
+import { ProfileFeed } from "~/components/ProfileFeed";
 
 const Profile: NextPage<{id: string}> = ({ id }) => {
   const { data } = api.profile.getUserById.useQuery({ id })
@@ -28,6 +29,8 @@ const Profile: NextPage<{id: string}> = ({ id }) => {
         <div className="p-4 text-2xl font-bold">{`@${data.username ?? ""}`}</div>
 
       <div className="w-full border-b border-slate-400" />
+
+      <ProfileFeed userId={id} />
     </Wrapper>
   </>
 }
