@@ -1,12 +1,9 @@
 import Head from "next/head";
 import { api } from "~/utils/api";
-import superjson from "superjson";
-import { appRouter } from "~/server/api/root";
-import { prisma } from "~/server/db";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { Wrapper } from "~/components/Wrapper";
-import { createServerSideHelpers } from "@trpc/react-query/server";
 import { ProfileFeed } from "~/components/ProfileFeed";
+import { generateSSGHelper } from "~/server/helpers/ssgHelper";
 
 const Profile: NextPage<{id: string}> = ({ id }) => {
   const { data } = api.profile.getUserById.useQuery({ id })
@@ -36,11 +33,7 @@ const Profile: NextPage<{id: string}> = ({ id }) => {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const ssg = createServerSideHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson
-  })
+  const ssg = generateSSGHelper()
 
   const slug = context.params?.slug
 
